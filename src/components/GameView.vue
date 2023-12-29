@@ -3,6 +3,11 @@
     <h3>{{ letters }}</h3>
     <input type="text" v-model="inputWord" id="inputWord" placeholder="write">
     <button type="submit" @click="validateWord">Check</button>
+    <ul id="guessedWords">
+      <li v-for="word in shownWords" :key="word">
+        {{ word }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -14,20 +19,23 @@ export default {
   data() {
     return {
       filePath: "/src/assets/filtered_words_100.txt",
-      letters: null
+      letters: null,
+      shownWords: []
     };
   },
-  created() {
+  mounted() {
     this.randomLetters();
+  },
+  computed: {
   },
   methods: {
     async randomLetters() {
       this.letters = await pickLetters(this.filePath);
     },
-    validateWord() {
-      console.log(this.inputWord);
-      if (validateWord(this.inputWord, this.randomLetters)){
-        console.log("Palavra na lista");
+    async validateWord() {
+      const shouldWordBeShown = await validateWord(this.inputWord, this.letters);
+      if (shouldWordBeShown){
+        this.shownWords.push(this.inputWord);
       } else{
         console.log("Palavra não tá na lista");
       }
