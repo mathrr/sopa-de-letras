@@ -7,8 +7,36 @@ import GameView from './components/GameView.vue'
     <div class="wrapper">
       <GameView/>
     </div>
+    <Popup v-if="popupTriggers.buttonTrigger" :TogglePopup="() => TogglePopup('buttonTrigger')">
+			<h2>My Button Popup</h2>
+		</Popup>
   </main>
 </template>
+
+<script>
+import { ref } from 'vue';
+import Popup from './components/Popup';
+
+export default {
+	setup () {
+		const popupTriggers = ref({
+			buttonTrigger: false,
+			timedTrigger: false
+		});
+
+		const TogglePopup = (trigger) => {
+			popupTriggers.value[trigger] = !popupTriggers.value[trigger]
+		}
+
+		return {
+			Popup,
+			popupTriggers,
+			TogglePopup
+		}
+	}
+}
+</script>
+
 
 <style scoped>
 header {
